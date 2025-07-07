@@ -11,6 +11,7 @@ class NewController extends CI_Controller
 
 
         $this->form_validation->set_rules('username', 'Username', 'required|trim');
+        //check it has a name or not
         if (empty($_FILES['document']['name'])) {
             $this->form_validation->set_rules('document', 'Image', 'required');
         }
@@ -22,27 +23,28 @@ class NewController extends CI_Controller
         } else {
             $config['upload_path'] = './uploads';
             $config['allowed_types'] = 'gif|jpg|png';
-            // $config['max_size'] = 100;
-            // $config['max_width'] = 1024;
-            // $config['max_height'] = 768;
+
 
             $this->load->library('upload', $config);
-            $this->upload->do_upload('document');
-            $data = $this->upload->data();
-            echo $data['file_name'];
-            echo '<pre>';
-            print_r($data);
 
-            // $inserted = $this->NewModels->get_data();
-            // if ($inserted) {
-            //     $this->load->view('success');
-            // } else {
-            //     echo "Something went wrong. Please try again.";
-            // }
+            //extract name form file
+
+            if ($this->upload->do_upload('document')) {
+                $uploadData = $this->upload->data();
+                $imageName = $uploadData['file_name'];
+            } else {
+                echo $this->upload->display_errors();
+                return;
+            }
+
+
+            $inserted = $this->NewModels->get_data($imageName);
+            if ($inserted) {
+                $this->load->view('success');
+            } else {
+                echo "Something went wrong. Please try again.";
+            }
         }
-
-
-
     }
 }
 

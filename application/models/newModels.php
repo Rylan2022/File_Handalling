@@ -3,14 +3,19 @@ defined('BASEPATH') or exit('No direct script allowed');
 
 class NewModels extends CI_Model
 {
-    public function get_data()
+    public function get_data($imageName)
     {
 
         $value = [
             'username' => $this->input->post('username', true),
             'email' => $this->input->post('email', true),
-            'password' => $this->input->post('password', true)
+            'password' => $this->input->post('password', true),
+            'image' => $imageName
         ];
+        // echo '<pre>';
+        // print_r($value);
+
+        // die;
 
 
         return $this->db->insert('users', $value);
